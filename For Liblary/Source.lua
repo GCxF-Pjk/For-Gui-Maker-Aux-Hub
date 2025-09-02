@@ -1,4 +1,4 @@
--- // Liblary for ( DNS )
+-- // Library for ( DNS ) \\ --
 local GuiLib = {}
 
 local TweenService = game:GetService("TweenService")
@@ -6,7 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 local player = game.Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
--- // Helper for simple hover style ( free to modify )
+-- // Helper for simple hover ( free to modify )
 local function addHoverEffect(button)
     button.MouseEnter:Connect(function()
         TweenService:Create(button, TweenInfo.new(0.25), {
@@ -23,11 +23,11 @@ end
 -- // Helper
 local function style(obj)
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 10)
+    corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = obj
 
     local stroke = Instance.new("UIStroke")
-    stroke.Thickness = 2
+    stroke.Thickness = 1.5
     stroke.Color = Color3.fromRGB(0, 170, 255)
     stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     stroke.Parent = obj
@@ -40,8 +40,9 @@ function GuiLib:CreateWindow(title)
     screenGui.ResetOnSpawn = false
     screenGui.Parent = PlayerGui
 
+    -- Main frame
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 250, 0, 220)
+    frame.Size = UDim2.new(0, 220, 0, 300)
     frame.Position = UDim2.new(0, 30, 0, 100)
     frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     frame.BackgroundTransparency = 0.1
@@ -49,23 +50,41 @@ function GuiLib:CreateWindow(title)
     frame.Parent = screenGui
     style(frame)
 
+    -- Title label
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, 0, 0, 30)
+    titleLabel.Size = UDim2.new(1, 0, 0, 25)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = title or "Gui Library"
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextSize = 18
+    titleLabel.TextSize = 16
     titleLabel.Parent = frame
 
+    -- Scrolling frame container
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Size = UDim2.new(1, -10, 1, -35)
+    scrollingFrame.Position = UDim2.new(0, 5, 0, 30)
+    scrollingFrame.BackgroundTransparency = 1
+    scrollingFrame.BorderSizePixel = 0
+    scrollingFrame.ScrollBarThickness = 6
+    scrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 170, 255)
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollingFrame.Parent = frame
+
+    -- Layout for scrolling content
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 8)
+    layout.Padding = UDim.new(0, 5)
     layout.FillDirection = Enum.FillDirection.Vertical
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    layout.VerticalAlignment = Enum.VerticalAlignment.Center
-    layout.Parent = frame
+    layout.VerticalAlignment = Enum.VerticalAlignment.Top
+    layout.Parent = scrollingFrame
 
-    -- make kt draggble
+    -- Auto-update canvas size
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 10)
+    end)
+
+    -- Make it draggable
     local dragging, dragInput, dragStart, startPos
     frame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -93,19 +112,19 @@ function GuiLib:CreateWindow(title)
         end
     end)
 
-    self.Frame = frame
+    self.Frame = scrollingFrame
     return self
 end
 
--- // Add Button ( DNS )
+-- // Add Button
 function GuiLib:Button(text, callback)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 40)
+    button.Size = UDim2.new(0, 180, 0, 32)
     button.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     button.Text = text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Font = Enum.Font.GothamBold
-    button.TextSize = 18
+    button.TextSize = 14
     button.Parent = self.Frame
     style(button)
     addHoverEffect(button)
@@ -114,15 +133,15 @@ function GuiLib:Button(text, callback)
     return button
 end
 
--- // Add Toggle ( DNS )
+-- // Add Toggle
 function GuiLib:Toggle(text, callback)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 40)
+    button.Size = UDim2.new(0, 180, 0, 32)
     button.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     button.Text = text .. " : OFF"
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Font = Enum.Font.GothamBold
-    button.TextSize = 18
+    button.TextSize = 14
     button.Parent = self.Frame
     style(button)
     addHoverEffect(button)
@@ -137,16 +156,16 @@ function GuiLib:Toggle(text, callback)
     return button
 end
 
--- // Add TextBox ( DNS )
+-- // Add TextBox
 function GuiLib:TextBox(placeholder, callback)
     local textBox = Instance.new("TextBox")
-    textBox.Size = UDim2.new(0, 200, 0, 40)
+    textBox.Size = UDim2.new(0, 180, 0, 32)
     textBox.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     textBox.PlaceholderText = placeholder
     textBox.Text = ""
     textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     textBox.Font = Enum.Font.GothamBold
-    textBox.TextSize = 18
+    textBox.TextSize = 14
     textBox.ClearTextOnFocus = false
     textBox.Parent = self.Frame
     style(textBox)

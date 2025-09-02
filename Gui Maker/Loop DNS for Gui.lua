@@ -1,6 +1,6 @@
 -- For Loops 
 
-
+-- Simple Loops
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local remoteEvent = ReplicatedStorage:WaitForChild("YourRemoteEvent") -- Replace with your event name
 
@@ -23,3 +23,30 @@ local function toggleLoop()
         print("Loop stopped!")
     end
 end
+
+
+
+
+-- For Gui Loops 
+
+
+-- Replace your existing toggle button click event with:
+toggleButton.MouseButton1Click:Connect(function()
+    isToggled = not isToggled
+    toggleButton.Text = isToggled and "ON" or "OFF"
+    
+    -- Add the loop toggle here
+    isLooping = isToggled
+    
+    if isLooping then
+        spawn(function()
+            while isLooping do
+                -- Fire your remote event here
+                remoteEvent:FireServer() -- Add your arguments
+                wait(0.5) -- Adjust delay as needed
+            end
+        end)
+    end
+    
+    print("Toggle state:", isToggled)
+end)

@@ -50,3 +50,28 @@ toggleButton.MouseButton1Click:Connect(function()
     
     print("Toggle state:", isToggled)
 end)
+
+
+
+-- Simple Infinite Loops ( DNS )
+
+
+while true do
+    remoteEvent:FireServer()
+    wait(1)
+end
+
+
+
+
+
+
+
+-- Loops X Times
+
+
+-- you can also change the 10 whatever you want 
+for i = 1, 10 do -- Loop 10 times
+    remoteEvent:FireServer()
+    wait(0.5)
+end
